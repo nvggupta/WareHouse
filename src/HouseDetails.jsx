@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import WarehouseImage from "./assests/2023-3.jpg";
 
+import { updateData } from "../HouseWareSlice/HouseWareSlice";
 const HouseDetails = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const { data } = useSelector((state) => state.WareHouses);
-  const dispatch = useDispatch();
 
   const item = data.find((ele) => ele.id == id);
 
@@ -31,15 +32,15 @@ const HouseDetails = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+ 
   };
 
   const handleSaveClick = () => {
     setIsEditing(false);
-    // Dispatch the action to update the warehouse details in the Redux store
-    dispatch({
+    dispatch(updateData({
       type: "UPDATE_WAREHOUSE",
-      payload: { id, ...formData },
-    });
+      updateData: { id, ...formData },
+    }))
   };
 
   return (

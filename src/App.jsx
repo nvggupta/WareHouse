@@ -1,68 +1,71 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IoIosAdd } from "react-icons/io";
 import { addData } from "../HouseWareSlice/HouseWareSlice";
 import { IoClose } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import WareHouseCard from "./WareHouseCard";
-import { useAsyncValue, useNavigate } from "react-router-dom";
+
 function App() {
   const [showPopup, setShowPopup] = useState(false);
-  const [val , setVal] = useState("");
-  const navigate = useNavigate();
+  const [val, setVal] = useState("");
+
   const [userData, setUserData] = useState({
     name: "",
-    code: null,
+    code: "",
     cluster: "",
     city: "",
     space_available: "",
-    is_registered: null,
-    is_live: null,
+    is_registered: "",
+    is_live: "",
   });
-  const dispatch = useDispatch();;
-  const {data , city , cluster} = useSelector((state) => state.WareHouses);
 
+  const dispatch = useDispatch();
+  const { data, city, cluster } = useSelector((state) => state.WareHouses);
 
   const handleAddClick = () => {
     setShowPopup(true);
   };
-  const handleSubmit =(e)=>{
-    e.preventDefault()
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     dispatch(addData(userData));
-  }
+    setShowPopup(false);
+  };
+
   const handleClosePopup = () => {
     setShowPopup(false);
   };
-  const filterData = (items)=>{
-      return items.filter((elem)=>elem.name.toLowerCase().includes(val.toLowerCase()));
-  }
+
+  const filterData = (items) => {
+    return items.filter((elem) =>
+      elem.name.toLowerCase().includes(val.toLowerCase())
+    );
+  };
+
   return (
-    <div className="relative">
-      <h1 className="text-6xl text-red-600 text-center">WareHouse</h1>
-      <div className="flex justify-around items-center w-full mt-5">
-        <div className="flex gap-10 justify-center items-start w-2/3">
+    <div className="relative p-4">
+      <h1 className="text-4xl sm:text-6xl text-red-600 text-center">WareHouse</h1>
+      <div className="flex flex-col sm:flex-row justify-around items-center w-full mt-5">
+        <div className="flex gap-4 sm:gap-10 justify-center items-start w-full sm:w-2/3">
           <input
             type="text"
             placeholder="Search Warehouse"
-            className="p-5 outline-none rounded-lg w-2/3 text-xl border border-black"
-           onChange={(e)=>setVal(e.target.value)}
+            className="p-2 sm:p-5 outline-none rounded-lg w-2/3 text-lg sm:text-xl border border-black"
+            onChange={(e) => setVal(e.target.value)}
           />
-          <button
-            className="p-5 rounded-lg w-48 border border-black"
-            
-          >
+          <button className="p-2 sm:p-5 rounded-lg w-32 sm:w-48 border border-black">
             Search
           </button>
         </div>
         <div
-          className="mb-4 flex items-center justify-center gap-4 bg-blue-600 p-5 rounded-lg text-white text-xl cursor-pointer"
+          className="mt-4 sm:mt-0 mb-4 flex items-center justify-center gap-4 bg-blue-600 p-3 sm:p-5 rounded-lg text-white text-lg sm:text-xl cursor-pointer"
           onClick={handleAddClick}
         >
           <span>Add New Warehouse</span>
-          <IoIosAdd className="text-3xl" />
+          <IoIosAdd className="text-2xl sm:text-3xl" />
         </div>
       </div>
-      <div className="flex flex-1 flex-wrap gap-5 justify-center mt-9">
+      <div className="flex flex-wrap gap-5 justify-center mt-9">
         {filterData(data)?.map((elem, ind) => (
           <WareHouseCard
             key={ind}
@@ -72,19 +75,18 @@ function App() {
             city={elem.city}
             space={elem.space_available}
             code={elem.code}
-           
           />
         ))}
       </div>
       {showPopup && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 w-full">
-          <div className="p-5 w-[700px]  bg-white rounded-lg shadow-lg ">
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50 p-4">
+          <div className="bg-white p-5 rounded-lg shadow-lg w-full max-w-lg">
             <IoClose
-              className="text-right text-2xl ml-[630px] cursor-pointer"
-              onClick={() => handleClosePopup()}
+              className="text-right text-2xl cursor-pointer float-right"
+              onClick={handleClosePopup}
             />
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-3 gap-4 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-semibold">Name</label>
                   <input
@@ -117,7 +119,7 @@ function App() {
                     <option value="" disabled selected>
                       Select City
                     </option>
-                    {city.map((elem, ind) => (
+                    {city?.map((elem, ind) => (
                       <option key={ind}>{elem}</option>
                     ))}
                   </select>
@@ -193,19 +195,12 @@ function App() {
                 <div className="col-span-full flex justify-end">
                   <button
                     type="submit"
-                    className="w-1/2 p-2 mt-4 mr-40 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full sm:w-1/2 p-2 mt-4 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     Submit
                   </button>
                 </div>
               </div>
-              <button
-                type="button"
-                className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-                onClick={handleClosePopup}
-              >
-                X
-              </button>
             </form>
           </div>
         </div>

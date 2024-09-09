@@ -24,9 +24,19 @@ export const houseSlice = createSlice({
                     alert("Add All Field")
                 }
         },
+        updateData: (state , action)=>{
+            console.log(current(state.data));
+            console.log(action.payload.updateData)
+            let index = state.data.findIndex(elem=>elem.id==action.payload.updateData.id);
+            state.data[index] =  action.payload.updateData;
+            // const updatedState = state.data.filter(elem=>elem.id != action.payload.updateData.id);
+            // console.log(updateData);
+            // updatedState.push(action.payload.updateData);
+            // state.data = [...updatedState];
+        }
       
     }
 });
 
-export const { addData } = houseSlice.actions;
+export const { addData,updateData } = houseSlice.actions;
 export default houseSlice.reducer;
